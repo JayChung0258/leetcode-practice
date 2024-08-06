@@ -3,30 +3,30 @@
 #
 # [347] Top K Frequent Elements
 #
+import heapq
 from typing import List
 from collections import Counter
 # @lc code=start
 class Solution:
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        # bucket sort
-
-        # bucket key(freq): value[number]
+        # max heap
 
         ct = Counter(nums)
-        
-        # put into bucket
-        bucket = [[] for _ in range(len(nums)+1)]
-        for key, freq in ct.items():
-            bucket[freq].append(key)
 
-        # find top k freq
+        max_heap = []
+        for key, value in ct.items():
+            heapq.heappush(max_heap, (-value, key))
+
         res = []
-        for i in range(len(bucket)-1, -1, -1):
-            for num in bucket[i]:
-                res.append(num)
-                if len(res) == k:
-                    return res
+        for _ in range(k):
+            value, key = heapq.heappop(max_heap)
+            res.append(key)
 
+        return res
+
+
+
+        
             
 # @lc code=end
 
