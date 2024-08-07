@@ -7,35 +7,38 @@
 import random
 # @lc code=start
 class RandomizedSet:
+    # key is how to implement remove
+    # random must use list or otherwise cannot be O(1)
 
     def __init__(self):
-        self.val_to_index = {}
         self.li = []
+        self.v_to_idx = {}
 
     def insert(self, val: int) -> bool:
-        if val in self.val_to_index:
+        if val in self.v_to_idx:
             return False
         
+        self.v_to_idx[val] = len(self.li)
         self.li.append(val)
-        self.val_to_index[val] = len(self.li)-1
+
         return True
 
     def remove(self, val: int) -> bool:
-        if val not in self.val_to_index:
+        if val not in self.v_to_idx:
             return False
-        
-        # swap value and index
-        idx = self.val_to_index[val]
-        self.val_to_index[self.li[-1]] = idx
+        # swap
+        idx = self.v_to_idx[val]
+        self.v_to_idx[self.li[-1]] = idx
         self.li[idx], self.li[-1] = self.li[-1], self.li[idx]
-
+        
         self.li.pop()
-        del self.val_to_index[val]
+        del self.v_to_idx[val]
+
         return True
 
     def getRandom(self) -> int:
-        res = random.choice(self.li)
-        return res
+        return random.choice(self.li)
+
 
 
 # Your RandomizedSet object will be instantiated and called as such:

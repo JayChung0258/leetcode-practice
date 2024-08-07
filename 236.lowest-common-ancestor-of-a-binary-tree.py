@@ -13,23 +13,43 @@ class TreeNode:
         self.right = None
 
 class Solution:
+    def __init__(self):
+        self.p_path = []
+        self.q_path = []
+        self.path = []
+
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
         
-        if not root:
-            return None
-        
-        if p == root or q == root:
-            return root
-        
-        left = self.lowestCommonAncestor(root.left, p, q)
-        right = self.lowestCommonAncestor(root.right, p, q)
+        # find two paths of p and q, and get the last same node (lowest ancestor)
+        self.traversal(root, p, q)
 
-        # left and right both has answer -> root is LCA
-        if left and right:
-            return root
+        res = root
+
+        for i in range(min(len(self.p_path), len(self.q_path))):
+            if self.p_path[i] == self.q_path[i]:
+                res = self.p_path[i]
+
+        return res
+
+
+    def traversal(self, root, p, q):
+        # traversal
+        if not root:
+            return
         
-        # left or right only has one answer -> 2 nodes in one subtree -> subproblem
-        return left if left else right
+        self.path.append(root)
+
+        if root.val == p.val:
+            self.p_path = self.path[:]
+
+        if root.val == q.val:
+            self.q_path = self.path[:]
+
+        self.traversal(root.left, p, q)
+        self.traversal(root.right, p, q)
+        
+        self.path.pop()
+
 
 
 # @lc code=end
